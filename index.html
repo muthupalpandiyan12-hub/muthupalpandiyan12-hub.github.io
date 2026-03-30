@@ -1,28 +1,43 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
   <title>SwastriCare</title>
 
   <script>
-    window.onload = function () {
+    function openApp() {
       const params = new URLSearchParams(window.location.search);
       const family = params.get("family");
 
-      if (family) {
-        window.location.href =
-          "intent://join?family=" + family +
-          "#Intent;scheme=swastricare;package=com.example.swastricarefamilyhub;end";
+      if (!family) return;
 
-        setTimeout(() => {
-          window.location.href =
-            "https://play.google.com/store/apps/details?id=com.example.swastricarefamilyhub";
-        }, 2000);
-      }
-    };
+      // ✅ Try open app
+      const appLink = "swastricare://join?family=" + family;
+
+      // Create invisible iframe (BEST METHOD)
+      const iframe = document.createElement("iframe");
+      iframe.style.display = "none";
+      iframe.src = appLink;
+      document.body.appendChild(iframe);
+
+      // ⏱ Fallback to Play Store
+      setTimeout(() => {
+        window.location.href =
+          "https://play.google.com/store/apps/details?id=com.example.swastricarefamilyhub";
+      }, 2000);
+    }
   </script>
 </head>
 
-<body>
+<body onload="openApp()">
+
   <h2>Opening SwastriCare App...</h2>
+
+  <!-- ✅ Manual button (IMPORTANT fallback) -->
+  <button onclick="openApp()" style="padding:10px 20px;font-size:16px;">
+    Open App
+  </button>
+
 </body>
 </html>
+```
