@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>SwastriCare</title>
+    <title>Join Family</title>
 
-  <script>
-    window.onload = function () {
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get("code");
+    <script>
+        function openApp() {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get("code");
 
-      if (code) {
-        const appUrl = "swastricare://join?code=" + code;
+            if (!code) {
+                document.getElementById("msg").innerText = "Invalid invite link";
+                return;
+            }
 
-        // Try opening app
-        window.location.href = appUrl;
+            // 🔥 OPEN YOUR APP
+            window.location.href = "swastri://join?code=" + code;
 
-        // Show message if app not installed
-        setTimeout(function () {
-          document.body.innerHTML =
-            "<h2>App not installed</h2><p>Please install SwastriCare app to continue.</p>";
-        }, 2000);
-      } else {
-        document.body.innerHTML = "<h2>Invalid invite link</h2>";
-      }
-    };
-  </script>
+            // fallback
+            setTimeout(() => {
+                document.getElementById("msg").innerText =
+                    "If app didn’t open, please install it.";
+            }, 2000);
+        }
+    </script>
 </head>
 
-<body>
-  <h2>Opening SwastriCare App...</h2>
+<body onload="openApp()" style="text-align:center; margin-top:50px;">
+    <h2>Opening SwastriCare...</h2>
+    <p id="msg">Please wait...</p>
 </body>
 </html>
