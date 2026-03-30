@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.example.swastricarefamilyhub",
+      "sha256_cert_fingerprints": [
+        "DD:CD:01:E5:09:B0:DA:C2:71:8E:0C:A0:A6:B6:85:1B:6D:07:D3:2D:3F:DE:C6:BA:CC:EC:8C:4F:22:03:4D:6E"
+      ]
+    }
+  }
+]
