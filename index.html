@@ -10,15 +10,14 @@
 
       if (code) {
         const appUrl = "swastricare://join?code=" + code;
-        const fallback =
-          "https://play.google.com/store/apps/details?id=com.example.swastricarefamilyhub";
 
-        // Try opening the app
+        // Try opening app
         window.location.href = appUrl;
 
-        // Fallback to Play Store if app not installed
+        // Show message if app not installed
         setTimeout(function () {
-          window.location.href = fallback;
+          document.body.innerHTML =
+            "<h2>App not installed</h2><p>Please install SwastriCare app to continue.</p>";
         }, 2000);
       } else {
         document.body.innerHTML = "<h2>Invalid invite link</h2>";
@@ -29,6 +28,5 @@
 
 <body>
   <h2>Opening SwastriCare App...</h2>
-  <p>If the app does not open, please install it from Play Store.</p>
 </body>
 </html>
