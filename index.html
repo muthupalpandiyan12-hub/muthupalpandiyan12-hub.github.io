@@ -5,17 +5,22 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const family = params.get("family");
+    const code = params.get("code");
 
-    if (family) {
+    if (code) {
+      const appUrl = "swastricare://join?code=" + code;
+      const fallback =
+        "https://play.google.com/store/apps/details?id=com.example.swastricarefamilyhub";
+
       // Try open app
-      window.location.href = "swastricare://join?family=" + family;
+      window.location.href = appUrl;
 
-      // Fallback to Play Store
+      // Fallback
       setTimeout(() => {
-        window.location.href =
-          "https://play.google.com/store/apps/details?id=com.example.swastricarefamilyhub";
+        window.location.href = fallback;
       }, 2000);
+    } else {
+      document.body.innerHTML = "Invalid invite link";
     }
   </script>
 </head>
