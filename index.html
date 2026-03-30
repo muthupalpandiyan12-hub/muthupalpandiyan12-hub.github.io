@@ -4,28 +4,31 @@
   <title>SwastriCare</title>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
+    window.onload = function () {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
 
-    if (code) {
-      const appUrl = "swastricare://join?code=" + code;
-      const fallback =
-        "https://play.google.com/store/apps/details?id=com.example.swastricarefamilyhub";
+      if (code) {
+        const appUrl = "swastricare://join?code=" + code;
+        const fallback =
+          "https://play.google.com/store/apps/details?id=com.example.swastricarefamilyhub";
 
-      // Try open app
-      window.location.href = appUrl;
+        // Try opening the app
+        window.location.href = appUrl;
 
-      // Fallback
-      setTimeout(() => {
-        window.location.href = fallback;
-      }, 2000);
-    } else {
-      document.body.innerHTML = "Invalid invite link";
-    }
+        // Fallback to Play Store if app not installed
+        setTimeout(function () {
+          window.location.href = fallback;
+        }, 2000);
+      } else {
+        document.body.innerHTML = "<h2>Invalid invite link</h2>";
+      }
+    };
   </script>
 </head>
 
 <body>
   <h2>Opening SwastriCare App...</h2>
+  <p>If the app does not open, please install it from Play Store.</p>
 </body>
 </html>
