@@ -1,33 +1,26 @@
-```html
 <!DOCTYPE html>
 <html>
 <head>
   <title>SwastriCare</title>
 
   <script>
-    function openApp() {
-      const params = new URLSearchParams(window.location.search);
-      const family = params.get("family");
+    const params = new URLSearchParams(window.location.search);
+    const family = params.get("family");
 
-      if (!family) return;
+    if (family) {
+      // Try open app
+      window.location.href = "swastricare://join?family=" + family;
 
-      const appLink = "swastricare://join?family=" + family;
-
-      // Try opening app
-      window.location.href = appLink;
+      // Fallback to Play Store
+      setTimeout(() => {
+        window.location.href =
+          "https://play.google.com/store/apps/details?id=com.example.swastricarefamilyhub";
+      }, 2000);
     }
   </script>
 </head>
 
-<body onload="openApp()">
-
+<body>
   <h2>Opening SwastriCare App...</h2>
-
-  <!-- 🔥 Manual button -->
-  <button onclick="openApp()" style="padding:10px 20px;font-size:16px;">
-    Open App
-  </button>
-
 </body>
 </html>
-```
