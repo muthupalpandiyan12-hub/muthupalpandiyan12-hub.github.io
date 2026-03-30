@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SwastriCare</title>
+
+  <script>
+    window.onload = function () {
+      const params = new URLSearchParams(window.location.search);
+      const family = params.get("family");
+
+      if (family) {
+        window.location.href =
+          "intent://join?family=" + family +
+          "#Intent;scheme=swastricare;package=com.example.swastricarefamilyhub;end";
+
+        setTimeout(() => {
+          window.location.href =
+            "https://play.google.com/store/apps/details?id=com.example.swastricarefamilyhub";
+        }, 2000);
+      }
+    };
+  </script>
+</head>
+
+<body>
+  <h2>Opening SwastriCare App...</h2>
+</body>
+</html>
