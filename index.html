@@ -1,32 +1,180 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Join Family</title>
-
-    <script>
-        function openApp() {
-            const params = new URLSearchParams(window.location.search);
-            const code = params.get("code");
-
-            if (!code) {
-                document.getElementById("msg").innerText = "Invalid invite link";
-                return;
-            }
-
-            // 🔥 OPEN YOUR APP
-            window.location.href = "swastri://join?code=" + code;
-
-            // fallback
-            setTimeout(() => {
-                document.getElementById("msg").innerText =
-                    "If app didn’t open, please install it.";
-            }, 2000);
-        }
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SwastriCare Family Hub</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f0f0f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 36px 28px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+    .icon { font-size: 52px; margin-bottom: 16px; }
+    h1 { font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+    p {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .token-box {
+      background: #fff3f3;
+      border: 2px solid #ef9a9a;
+      border-radius: 14px;
+      padding: 18px 12px;
+      margin: 18px 0;
+      font-family: monospace;
+      font-size: 26px;
+      font-weight: 900;
+      color: #c62828;
+      letter-spacing: 4px;
+      word-break: break-all;
+    }
+    .status {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 16px;
+      min-height: 20px;
+    }
+    .btn-primary {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #e53935, #f57c00);
+      color: white;
+      text-decoration: none;
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      cursor: pointer;
+      border: none;
+    }
+    .note {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+    .badge {
+      display: inline-block;
+      background: #f3e8ff;
+      color: #6b39d4;
+      border-radius: 50px;
+      padding: 4px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .home-logo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #6b39d4, #0f9d84);
+      border-radius: 20px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+    }
+  </style>
 </head>
+<body>
+  <div id="emergency-page" class="card" style="display:none">
+    <div class="icon">🚨</div>
+    <div class="badge">Emergency Health Access</div>
+    <h1>Patient Health Summary</h1>
+    <p>A family member has shared temporary health access with you.</p>
 
-<body onload="openApp()" style="text-align:center; margin-top:50px;">
-    <h2>Opening SwastriCare...</h2>
-    <p id="msg">Please wait...</p>
+    <div class="token-box" id="token-display">Loading...</div>
+    <p class="status" id="status-text">Opening SwastriCare app...</p>
+
+    <a class="btn-primary" id="open-app-btn" href="#">
+      Open in SwastriCare App
+    </a>
+
+    <p class="note">
+      This link is valid for <strong>30 minutes</strong> only.<br>
+      After that, the token expires automatically.<br><br>
+      Shared securely via <strong>SwastriCare Family Hub</strong>.
+    </p>
+  </div>
+
+  <div id="home-page" class="card" style="display:none">
+    <div class="home-logo">🏥</div>
+    <h1>SwastriCare Family Hub</h1>
+    <p>A secure family health management app. Track vitals, medications, appointments, and share health records safely.</p>
+    <a class="btn-primary" href="https://play.google.com/store" style="text-decoration:none">
+      Download on Play Store
+    </a>
+    <p class="note">Available for Android devices.</p>
+  </div>
+
+  <script>
+    var savedPath = sessionStorage.getItem('gh_redirect_path');
+    var savedSearch = sessionStorage.getItem('gh_redirect_search');
+
+    if (savedPath) {
+      sessionStorage.removeItem('gh_redirect_path');
+      sessionStorage.removeItem('gh_redirect_search');
+      history.replaceState(null, '', savedPath + (savedSearch || ''));
+    }
+
+    var path = window.location.pathname;
+    var search = window.location.search;
+    var params = new URLSearchParams(search);
+    var token = params.get('token') || '';
+
+    if (path.indexOf('/emergency') === 0 || path.indexOf('/emergency/') === 0) {
+      showEmergencyPage(token);
+    } else {
+      showHomePage();
+    }
+
+    function showEmergencyPage(token) {
+      document.getElementById('emergency-page').style.display = 'block';
+
+      var formatted = token
+        ? (token.match(/.{1,4}/g) || [token]).join('  ')
+        : 'Invalid token';
+
+      document.getElementById('token-display').textContent = formatted;
+
+      var deepLink = 'swastri://emergency?token=' + encodeURIComponent(token);
+      document.getElementById('open-app-btn').href = deepLink;
+
+      if (token) {
+        window.location.href = deepLink;
+
+        setTimeout(function () {
+          document.getElementById('status-text').textContent =
+            'Tap the button above if the app did not open automatically.';
+        }, 2500);
+      } else {
+        document.getElementById('status-text').textContent =
+          'Invalid or missing token. Please ask for a new link.';
+        document.getElementById('open-app-btn').style.display = 'none';
+      }
+    }
+
+    function showHomePage() {
+      document.getElementById('home-page').style.display = 'block';
+    }
+  </script>
 </body>
 </html>
