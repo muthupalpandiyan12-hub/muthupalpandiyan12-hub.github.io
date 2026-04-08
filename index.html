@@ -102,9 +102,9 @@
     <p>A family member has shared temporary health access with you.</p>
 
     <div class="token-box" id="token-display">Loading...</div>
-    <p class="status" id="status-text">Opening SwastriCare app...</p>
+    <p class="status" id="emergency-status">Opening SwastriCare app...</p>
 
-    <a class="btn-primary" id="open-app-btn" href="#">
+    <a class="btn-primary" id="open-emergency-btn" href="#">
       Open in SwastriCare App
     </a>
 
@@ -115,13 +115,28 @@
     </p>
   </div>
 
+  <div id="invite-page" class="card" style="display:none">
+    <div class="icon">👨‍👩‍👧</div>
+    <div class="badge">Family Invite</div>
+    <h1>Join Family</h1>
+    <p>You have received an invitation to join a family in SwastriCare.</p>
+
+    <div class="token-box" id="invite-code-display">Loading...</div>
+    <p class="status" id="invite-status">Opening SwastriCare app...</p>
+
+    <a class="btn-primary" id="open-invite-btn" href="#">
+      Open Invite in App
+    </a>
+
+    <p class="note">
+      If the app does not open automatically, tap the button above.
+    </p>
+  </div>
+
   <div id="home-page" class="card" style="display:none">
     <div class="home-logo">🏥</div>
     <h1>SwastriCare Family Hub</h1>
     <p>A secure family health management app. Track vitals, medications, appointments, and share health records safely.</p>
-    <a class="btn-primary" href="https://play.google.com/store" style="text-decoration:none">
-      Download on Play Store
-    </a>
     <p class="note">Available for Android devices.</p>
   </div>
 
@@ -138,10 +153,14 @@
     var path = window.location.pathname;
     var search = window.location.search;
     var params = new URLSearchParams(search);
-    var token = params.get('token') || '';
 
-    if (path.indexOf('/emergency') === 0 || path.indexOf('/emergency/') === 0) {
+    var token = params.get('token') || '';
+    var code = params.get('code') || '';
+
+    if (path.indexOf('/emergency') === 0 || token) {
       showEmergencyPage(token);
+    } else if (code) {
+      showInvitePage(code);
     } else {
       showHomePage();
     }
@@ -156,19 +175,43 @@
       document.getElementById('token-display').textContent = formatted;
 
       var deepLink = 'swastri://emergency?token=' + encodeURIComponent(token);
-      document.getElementById('open-app-btn').href = deepLink;
+      document.getElementById('open-emergency-btn').href = deepLink;
 
       if (token) {
         window.location.href = deepLink;
-
         setTimeout(function () {
-          document.getElementById('status-text').textContent =
+          document.getElementById('emergency-status').textContent =
             'Tap the button above if the app did not open automatically.';
         }, 2500);
       } else {
-        document.getElementById('status-text').textContent =
+        document.getElementById('emergency-status').textContent =
           'Invalid or missing token. Please ask for a new link.';
-        document.getElementById('open-app-btn').style.display = 'none';
+        document.getElementById('open-emergency-btn').style.display = 'none';
+      }
+    }
+
+    function showInvitePage(code) {
+      document.getElementById('invite-page').style.display = 'block';
+
+      var formatted = code
+        ? (code.match(/.{1,4}/g) || [code]).join('  ')
+        : 'Invalid code';
+
+      document.getElementById('invite-code-display').textContent = formatted;
+
+      var deepLink = 'swastri://join?code=' + encodeURIComponent(code);
+      document.getElementById('open-invite-btn').href = deepLink;
+
+      if (code) {
+        window.location.href = deepLink;
+        setTimeout(function () {
+          document.getElementById('invite-status').textContent =
+            'Tap the button above if the app did not open automatically.';
+        }, 2500);
+      } else {
+        document.getElementById('invite-status').textContent =
+          'Invalid or missing invite code.';
+        document.getElementById('open-invite-btn').style.display = 'none';
       }
     }
 
