@@ -1,1 +1,16 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Redirecting...</title>
+</head>
+<body>
+  <p>Redirecting...</p>
+  <script>
+    sessionStorage.setItem('gh_redirect_path', window.location.pathname);
+    sessionStorage.setItem('gh_redirect_search', window.location.search);
+    window.location.replace('/');
+  </script>
+</body>
+</html>
